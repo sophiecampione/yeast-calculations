@@ -54,6 +54,8 @@ def calculate_ok():
             dil.grid(row=8)
             d1.grid(row=9, column=0)
             d2.grid(row=10, column=0)
+            du1.grid(row=9, column=2)
+            du2.grid(row=10, column=2)
             button_sc_dil.grid(row=11)
             result3.grid(row=15, column=0)
             result4.grid(row=15, column=1)
@@ -168,6 +170,8 @@ def remove_dil():
     result3.grid_remove()
     result4.grid_remove()
     button_sc_dil.grid_remove()
+    du1.grid_remove()
+    du2.grid_remove()
 
 
 # updates text when option is selected to the labels, units defined above
@@ -219,6 +223,7 @@ def update_label(value):
     entry.delete(0, 'end')
     entry1.delete(0, 'end')
     entry2.delete(0, 'end')
+    entry1dur.delete(0, 'end')
 
 
 # creates button
@@ -278,14 +283,14 @@ dil.grid(row=8)
 d1 = Label(master, text="current concentration:")
 d1.grid(row=9, column=0)
 
-d2 = Label(master, text="final volume")
+d2 = Label(master, text="final volume:")
 d2.grid(row=10, column=0)
 
 de1 = Entry(master)
-de1.grid_remove()
-
 de2 = Entry(master)
-de2.grid_remove()
+
+du1 = Label(master, text="cells/mL")
+du2 = Label(master, text='mL')
 
 button_sc_dil = Button(master, text="Calculate")
 button_sc_dil.grid(row=11)
