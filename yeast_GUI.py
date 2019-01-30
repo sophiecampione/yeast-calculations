@@ -32,9 +32,11 @@ units_fc = ['cells/mL', 'hours', 'minutes']
 def calculate_ok():
     choice = var.get()
     if choice == 'starting concentration':
-        try:
+        #try:
             # gets entries
-            fin_conc = float(entry.get())
+            #fin_conc = float(entry.get())
+            entry_uc = float(entry.get())
+            fin_conc = uc_f(entry_uc)
             hours = entry1.get()
             minutes = entry1dur.get()
             dur = float(hours) * 60 + float(minutes)
@@ -45,6 +47,10 @@ def calculate_ok():
             assert dou_time > 0
             ##calculates and updates result labels
             value = fin_conc / (2 ** (dur / dou_time))
+            if value > 9999:
+                value = '{:.2e}'.format(value)
+            else:
+                value = round(value,2)
             value = str(str(value) + " cells/mL")
             result1.config(text="The starting concentration is: ")
             result2.config(text=value)
@@ -71,6 +77,7 @@ def calculate_ok():
                     fin_vol = float(de2.get())
                     assert fin_vol > 0
                     dilution = start_conc * fin_vol / curr_conc
+                    dilution = round(dilution,2)
                     dilution = str(str(dilution) + " mL in " + str(fin_vol) + " mL final volume")
                     result3.config(text="The dilution is: ")
                     result4.config(text=dilution)
@@ -81,12 +88,13 @@ def calculate_ok():
             button_sc_dil.config(command=calc_dil)
 
 
-        except:
-            messagebox.showerror("Error", "Please enter values correctly as specified.")
+       # except:
+            #messagebox.showerror("Error", "Please enter values correctly as specified.")
     elif choice == 'final concentration':
         try:
             # gets entries, makes sure they're valid, calculates and displays result
-            start_conc = float(entry.get())
+            entry_uc = float(entry.get())
+            start_conc = uc_f(entry_uc)
             hours = entry1.get()
             minutes = entry1dur.get()
             dur = float(hours) * 60 + float(minutes)
@@ -95,6 +103,10 @@ def calculate_ok():
             assert dur > 0
             assert dou_time > 0
             value = start_conc * 2 ** (dur / dou_time)
+            if value > 9999:
+                value = '{:.2e}'.format(value)
+            else:
+                value = round(value,2)
             value = str(str(value) + " cells/mL")
             result1.config(text="The final concentration is: ")
             result2.config(text=value)
@@ -103,8 +115,10 @@ def calculate_ok():
     elif choice == "duration":
         try:
             # gets entries, makes sure they're valid, calculates and displays result
-            start_conc = float(entry.get())
-            fin_conc = float(entry1.get())
+            entry_uc = float(entry.get())
+            start_conc = uc_f(entry_uc)
+            entry_uc = float(entry1.get())
+            fin_conc = uc_f1(entry_uc)
             dou_time = float(entry2.get())
             assert start_conc > 0
             assert fin_conc > 0
@@ -123,8 +137,10 @@ def calculate_ok():
     elif choice == "doubling time":
         try:
             # gets entries, makes sure they're valid, calculates and displays result
-            start_conc = float(entry.get())
-            fin_conc = float(entry2.get())
+            entry_uc = float(entry.get())
+            start_conc = uc_f(entry_uc)
+            entry_uc = float(entry2.get())
+            fin_conc = uc_f2(entry_uc)
             hours = entry1.get()
             minutes = entry1dur.get()
             dur = float(hours) * 60 + float(minutes)
@@ -133,6 +149,7 @@ def calculate_ok():
             assert dur > 0
             assert start_conc < fin_conc
             value = dur * math.log(2) / (math.log(fin_conc / start_conc))
+            value = round(value, 2)
             value = str(str(value) + " minutes ")
 
             result1.config(text="The doubling time is: ")
@@ -143,14 +160,17 @@ def calculate_ok():
     elif choice == "dilution":
         try:
             # gets entries, makes sure they're valid, calculates and displays result
-            des_conc = float(entry.get())
-            curr_conc = float(entry1.get())
+            entry_uc = float(entry.get())
+            des_conc = uc_f(entry_uc)
+            entry_uc = float(entry1.get())
+            curr_conc = uc_f1(entry_uc)
             fin_vol = float(entry2.get())
             assert des_conc > 0
             assert curr_conc > 0
             assert fin_vol > 0
             assert des_conc < curr_conc
             value = fin_vol * des_conc / curr_conc
+            value = round(value,2)
             value = str(str(value) + " mL into " + str(fin_vol) + " mL final volume ")
 
             result1.config(text="The dilution is: ")
@@ -172,6 +192,12 @@ def remove_dil():
     button_sc_dil.grid_remove()
     du1.grid_remove()
     du2.grid_remove()
+    p_uc.grid_forget()
+    p_uc1.grid_forget()
+    p_uc2.grid_forget()
+    units.grid_forget()
+    units1.grid_forget()
+    units2.grid_forget()
 
 
 # updates text when option is selected to the labels, units defined above
@@ -184,30 +210,45 @@ def update_label(value):
         remove_dil()
         entry1dur.grid(row=4, column=3)
         units1dur.grid(row=4, column=4)
+        p_uc.grid(row = 3, column = 2)
+        units1.grid(row = 4, column = 2)
+        units2.grid(row = 5, column = 2)
     elif choice == 'dilution':
         labels = labels_dil
         unit = units_dil
         remove_dil()
         entry1dur.grid_forget()
         units1dur.grid_forget()
+        p_uc.grid(row=3, column=2)
+        p_uc1.grid(row = 4, column = 2)
+        units2.grid(row = 5, column = 2)
     elif choice == 'duration':
         labels = labels_dur
         unit = units_dur
         remove_dil()
         entry1dur.grid_forget()
         units1dur.grid_forget()
+        p_uc.grid(row=3, column=2)
+        p_uc1.grid(row = 4, column = 2)
+        units2.grid(row = 5, column = 2)
     elif choice == 'final concentration':
         labels = labels_fc
         unit = units_fc
         remove_dil()
         entry1dur.grid(row=4, column=3)
         units1dur.grid(row=4, column=4)
+        p_uc.grid(row=3, column=2)
+        units1.grid(row=4, column=2)
+        units2.grid(row=5, column=2)
     else:
         labels = labels_dt
         unit = units_dt
         remove_dil()
         entry1dur.grid(row=4, column=3)
         units1dur.grid(row=4, column=4)
+        p_uc.grid(row=3, column=2)
+        units1.grid(row=4, column=2)
+        p_uc2.grid(row=5, column=2)
 
     display.config(text=labels[0])
     display1.config(text=labels[1])
@@ -248,7 +289,62 @@ entry = tkinter.Entry(master)
 entry.grid(row=3, column=1)
 
 units = tkinter.Label(master, text=units_sc[0])
-units.grid(row=3, column=2)
+#units.grid(row=3, column=2)
+
+unit_options = ["cells/mL", "x 10^4 cells/mL", "x 10^6 cells/mL", "x 10^8 cells/mL"]  # etc
+var_unit = StringVar(master)
+var_unit.set(unit_options[1])
+p_uc = OptionMenu(master, var_unit, *unit_options)
+p_uc.grid(row=3, column = 2)
+var_unit1 = StringVar(master)
+var_unit1.set(unit_options[1])
+p_uc1 = OptionMenu(master, var_unit1, *unit_options)
+var_unit2 = StringVar(master)
+var_unit2.set(unit_options[1])
+p_uc2 = OptionMenu(master, var_unit2, *unit_options)
+
+
+def uc_f(entry_uc):
+    var_choice = var_unit.get()
+    if var_choice == "x 10^4 cells/mL":
+        entry_uc_new = entry_uc * 10 **4
+        return entry_uc_new
+    elif var_choice =="x 10^6 cells/mL":
+        return entry_uc* 10**6
+    elif var_choice =="x 10^8 cells/mL":
+        return(entry_uc *10**8)
+    elif var_choice == "cells/mL":
+        return entry_uc
+    else:
+        return entry_uc
+
+def uc_f1(entry_uc):
+    var_choice = var_unit1.get()
+    if var_choice == "x 10^4 cells/mL":
+        entry_uc_new = entry_uc * 10 **4
+        return entry_uc_new
+    elif var_choice =="x 10^6 cells/mL":
+        return entry_uc* 10**6
+    elif var_choice =="x 10^8 cells/mL":
+        return(entry_uc *10**8)
+    elif var_choice == "cells/mL":
+        return entry_uc
+    else:
+        return entry_uc
+
+def uc_f2(entry_uc):
+    var_choice = var_unit2.get()
+    if var_choice == "x 10^4 cells/mL":
+        entry_uc_new = entry_uc * 10 **4
+        return entry_uc_new
+    elif var_choice =="x 10^6 cells/mL":
+        return entry_uc* 10**6
+    elif var_choice =="x 10^8 cells/mL":
+        return(entry_uc *10**8)
+    elif var_choice == "cells/mL":
+        return entry_uc
+    else:
+        return entry_uc
 
 display1 = tkinter.Label(master, text=labels_sc[1])
 display1.grid(row=4, column=0)
@@ -262,6 +358,7 @@ units1 = tkinter.Label(master, text=units_sc[1])
 units1.grid(row=4, column=2)
 units1dur = tkinter.Label(master, text="minutes")
 units1dur.grid(row=4, column=4)
+
 
 display2 = tkinter.Label(master, text=labels_sc[2])
 display2.grid(row=5, column=0)
@@ -302,5 +399,8 @@ result4 = tkinter.Label(master)
 result4.grid(row=15, column=1)
 
 remove_dil()
+p_uc.grid(row = 3, column = 2)
+units1.grid(row = 4, column = 2)
+units2.grid(row = 5, column = 2)
 
 master.mainloop()
