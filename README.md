@@ -2,7 +2,7 @@
 A simple cell count calculator. Able to calculate starting concentration, final concentration, duration of growth, doubling time and dilutions.
 
 ## Requirements:
-tkinter, math
+Python, tkinter, math
 
 ## Using the Calculator
 Running the program will cause a tkinter window to appear. The drop down menu provides the options for types of calculations: including starting concentration, final concentration, duration of growth, doubling time and dilution. 
