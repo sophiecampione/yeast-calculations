@@ -45,14 +45,12 @@ def calculate_ok():
             assert fin_conc > 0
             assert dur > 0
             assert dou_time > 0
-            ##calculates and updates result labels
+            #calculates and updates result labels
             value = fin_conc / (2 ** (dur / dou_time))
             if value > 9999:
-                value = '{:.2e}'.format(value)
-            elif value < 0.001:
-                value = '{:.2e}'.format(value)
+                value = '{:.3e}'.format(value)
             else:
-                value = round(value, 3)
+                value = round(value, 6)
             value = str(str(value) + " cells/mL")
             result1.config(text="The starting concentration is: ")
             result2.config(text=value)
@@ -80,14 +78,8 @@ def calculate_ok():
                     fin_vol = float(de2.get())
                     assert fin_vol > 0
                     dilution = start_conc * fin_vol / curr_conc
-                    dilution = round(dilution,2)
+                    dilution = round(dilution, 6)
                     dilution = str(str(dilution) + " mL in " + str(fin_vol) + " mL final volume")
-                    # if dilution > 9999:
-                    #     diltuion = '{:.2e}'.format(dilution)
-                    # elif dilution < 0.001:
-                    #     dilution = '{:.2e}'.format(dilution)
-                    # else:
-                    #     dilution = round(value, 3)
                     result3.config(text="The dilution is: ")
                     result4.config(text=dilution)
                 except:
@@ -115,9 +107,9 @@ def calculate_ok():
             assert dou_time > 0
             value = start_conc * 2 ** (dur / dou_time)
             if value > 9999:
-                value = '{:.2e}'.format(value)
+                value = '{:.3e}'.format(value)
             else:
-                value = round(value,2)
+                value = round(value, 6)
             value = str(str(value) + " cells/mL")
             result1.config(text="The final concentration is: ")
             result2.config(text=value)
@@ -191,7 +183,10 @@ def calculate_ok():
             assert fin_vol > 0
             assert des_conc < curr_conc
             value = fin_vol * des_conc / curr_conc
-            value = round(value,2)
+            if value < 0.0001:
+                value = '{:.6e}'.format(value)
+            else:
+                value = round(value, 6)
             value = str(str(value) + " mL into " + str(fin_vol) + " mL final volume ")
 
             result1.config(text="The dilution is: ")
