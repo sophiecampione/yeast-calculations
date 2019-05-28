@@ -6,6 +6,7 @@ import math
 # creates window
 master = tkinter.Tk()
 
+
 # creates options for drop down menu & sets default option
 OPTIONS = [
     "starting concentration", "final concentration", "duration", "doubling time", "dilution",
@@ -48,11 +49,14 @@ def calculate_ok():
             value = fin_conc / (2 ** (dur / dou_time))
             if value > 9999:
                 value = '{:.2e}'.format(value)
+            elif value < 0.001:
+                value = '{:.2e}'.format(value)
             else:
-                value = round(value,2)
+                value = round(value, 3)
             value = str(str(value) + " cells/mL")
             result1.config(text="The starting concentration is: ")
             result2.config(text=value)
+
             # adds dilution entry boxes, button and labels
             de1.grid(row=9, column=1)
             de2.grid(row=10, column=1)
@@ -64,11 +68,8 @@ def calculate_ok():
             button_sc_dil.grid(row=11)
             result3.grid(row=15, column=0)
             result4.grid(row=15, column=1)
-        except:
-            messagebox.showerror("Error",
-                                 "Please enter values correctly as specified. Make sure current concentration is larger than starting concentration. ")
 
-            # sub calculator: dilution calculator to dilute from the current concentration to desired starting concentration
+    # sub calculator: dilution calculator to dilute from the current concentration to desired starting concentration
             def calc_dil():
                 try:
 
@@ -81,6 +82,12 @@ def calculate_ok():
                     dilution = start_conc * fin_vol / curr_conc
                     dilution = round(dilution,2)
                     dilution = str(str(dilution) + " mL in " + str(fin_vol) + " mL final volume")
+                    # if dilution > 9999:
+                    #     diltuion = '{:.2e}'.format(dilution)
+                    # elif dilution < 0.001:
+                    #     dilution = '{:.2e}'.format(dilution)
+                    # else:
+                    #     dilution = round(value, 3)
                     result3.config(text="The dilution is: ")
                     result4.config(text=dilution)
                 except:
@@ -89,7 +96,9 @@ def calculate_ok():
 
             button_sc_dil.config(command=calc_dil)
 
-
+        except:
+                 messagebox.showerror("Error",
+                                 "Please enter values correctly as specified. ")
 
 
     elif choice == 'final concentration':
