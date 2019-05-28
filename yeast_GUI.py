@@ -9,7 +9,7 @@ master = tkinter.Tk()
 # creates options for drop down menu & sets default option
 OPTIONS = [
     "starting concentration", "final concentration", "duration", "doubling time", "dilution",
-]  # etc
+]
 var = StringVar(master)
 var.set(OPTIONS[0])
 
@@ -32,9 +32,8 @@ units_fc = ['cells/mL', 'hours', 'minutes']
 def calculate_ok():
     choice = var.get()
     if choice == 'starting concentration':
-        #try:
+        try:
             # gets entries
-            #fin_conc = float(entry.get())
             entry_uc = float(entry.get())
             fin_conc = uc_f(entry_uc)
             hours = entry1.get()
@@ -65,8 +64,11 @@ def calculate_ok():
             button_sc_dil.grid(row=11)
             result3.grid(row=15, column=0)
             result4.grid(row=15, column=1)
+        except:
+            messagebox.showerror("Error",
+                                 "Please enter values correctly as specified. Make sure current concentration is larger than starting concentration. ")
 
-            # dilution calculator to dilute from the current concentration to desired starting concentration
+            # sub calculator: dilution calculator to dilute from the current concentration to desired starting concentration
             def calc_dil():
                 try:
 
@@ -88,8 +90,8 @@ def calculate_ok():
             button_sc_dil.config(command=calc_dil)
 
 
-       # except:
-            #messagebox.showerror("Error", "Please enter values correctly as specified.")
+
+
     elif choice == 'final concentration':
         try:
             # gets entries, makes sure they're valid, calculates and displays result
@@ -112,6 +114,9 @@ def calculate_ok():
             result2.config(text=value)
         except:
             messagebox.showerror("Error", "Please enter values correctly as specified.")
+
+
+
     elif choice == "duration":
         try:
             # gets entries, makes sure they're valid, calculates and displays result
@@ -134,6 +139,10 @@ def calculate_ok():
         except:
             messagebox.showerror("Error",
                                  "Please enter values correctly as specified. Make sure starting concentration is less than final concentration.")
+
+
+
+
     elif choice == "doubling time":
         try:
             # gets entries, makes sure they're valid, calculates and displays result
@@ -157,6 +166,9 @@ def calculate_ok():
         except:
             messagebox.showerror("Error",
                                  "Please enter values correctly as specified. Make sure starting concentration is less than final concentration.")
+
+
+
     elif choice == "dilution":
         try:
             # gets entries, makes sure they're valid, calculates and displays result
@@ -267,20 +279,22 @@ def update_label(value):
     entry1dur.delete(0, 'end')
 
 
+# creates title
+title = tkinter.Label(master, text = "Yeast Calculator", font = ("Helvetica", 14))
+title.grid(row = 0)
+
 # creates button
 ok_calc_button = Button(master, text="OK", command=calculate_ok).grid(row=6)
 
 # creates the drop down menu
 p = tkinter.OptionMenu(master, var, *OPTIONS, command=update_label)
-p.grid(row=2)
+p.grid(row=2, column = 1)
 
-# creates title
-# title = tkinter.Label(master, text = "Yeast Calculator", font = ("Helvetica", 12))
-# title.grid(row = 0)
+
 
 # sets up widgets for entire program, which will be either visible or hidden depending on the options selected
-question = tkinter.Label(master, text="Please select calculation below:", font=("Helvetica", 10))
-question.grid(row=1)
+question = tkinter.Label(master, text="Please select calculation:", font=("Helvetica", 10))
+question.grid(row=2)
 
 display = tkinter.Label(master, text=labels_sc[0])
 display.grid(row=3, column=0)
